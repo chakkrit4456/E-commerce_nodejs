@@ -1,0 +1,663 @@
+// Schema ตาม 04-Data-Schema.md
+// dev: SQLite (รันได้ทันที) — production: เปลี่ยน provider เป็น "mysql" + DATABASE_URL (ทุก type ที่ใช้รองรับทั้งสอง)
+// ส่วนต่างจากสเปก: id เป็น Int (แทน BigInt) เพื่อให้ serialize JSON ตรง ๆ; ตารางระดับ MVP ครบ ส่วนโมดูลนอก MVP (states/cities/pickup, tickets) ยังไม่ทำ
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  admin
+  staff
+  customer
+}
+
+enum DiscountType {
+  amount
+  percent
+}
+
+enum TaxType {
+  amount
+  percent
+}
+
+enum ShippingType {
+  free
+  flat_rate
+  zone
+}
+
+enum ReviewStatus {
+  pending
+  approved
+}
+
+enum DeliveryStatus {
+  pending
+  confirmed
+  picked_up
+  on_the_way
+  delivered
+  cancelled
+}
+
+enum PaymentStatus {
+  unpaid
+  paid
+  refunded
+  partially_refunded
+}
+
+enum RefundStatus {
+  pending
+  approved
+  rejected
+}
+
+enum CouponType {
+  cart_base
+  product_base
+}
+
+enum BannerPosition {
+  home_1
+  home_2
+  home_3
+}
+
+enum PageType {
+  custom
+  system
+}
+
+enum UploadType {
+  image
+  video
+  document
+  archive
+}
+
+model User {
+  id              Int       @id @default(autoincrement())
+  name            String
+  email           String?   @unique
+  phone           String?   @unique
+  password        String
+  userType        UserType  @default(customer)
+  avatarUploadId  Int?
+  emailVerifiedAt DateTime?
+  provider        String?
+  providerId      String?
+  banned          Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  addresses Address[]
+  orders    Order[]
+  carts     Cart[]
+  wishlists Wishlist[]
+  reviews   Review[]
+  roles     UserRole[]
+
+  @@map("users")
+}
+
+model Role {
+  id          Int              @id @default(autoincrement())
+  name        String           @unique
+  users       UserRole[]
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id    Int              @id @default(autoincrement())
+  key   String           @unique // เช่น products.manage
+  roles RolePermission[]
+
+  @@map("permissions")
+}
+
+model UserRole {
+  userId Int
+  roleId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  roleId       Int
+  permissionId Int
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model Address {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  name       String
+  phone      String
+  address    String
+  city       String
+  state      String?
+  country    String   @default("TH")
+  postalCode String
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("addresses")
+}
+
+model Upload {
+  id               Int        @id @default(autoincrement())
+  userId           Int?
+  fileOriginalName String
+  fileName         String // path หรือ URL
+  extension        String
+  type             UploadType @default(image)
+  fileSize         Int        @default(0)
+  width            Int?
+  height           Int?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  @@map("uploads")
+}
+
+model Category {
+  id              Int      @id @default(autoincrement())
+  parentId        Int?
+  level           Int      @default(0)
+  name            String
+  slug            String   @unique
+  icon            String? // emoji หรือ URL (แทน iconUploadId ใน MVP)
+  banner          String? // รูปใน Featured strip
+  orderLevel      Int      @default(0)
+  featured        Boolean  @default(false)
+  metaTitle       String?
+  metaDescription String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  parent       Category?             @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children     Category[]            @relation("CategoryTree")
+  products     Product[]
+  translations CategoryTranslation[]
+  featuredHome HomeFeaturedCategory?
+
+  @@index([parentId])
+  @@map("categories")
+}
+
+model CategoryTranslation {
+  id         Int      @id @default(autoincrement())
+  categoryId Int
+  lang       String
+  name       String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, lang])
+  @@map("category_translations")
+}
+
+model Brand {
+  id              Int       @id @default(autoincrement())
+  name            String
+  slug            String    @unique
+  logo            String?
+  metaTitle       String?
+  metaDescription String?
+  top             Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  products        Product[]
+
+  @@map("brands")
+}
+
+model Attribute {
+  id     Int              @id @default(autoincrement())
+  name   String
+  values AttributeValue[]
+
+  @@map("attributes")
+}
+
+model AttributeValue {
+  id          Int       @id @default(autoincrement())
+  attributeId Int
+  value       String
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+
+  @@map("attribute_values")
+}
+
+model Color {
+  id   Int    @id @default(autoincrement())
+  name String
+  code String
+
+  @@map("colors")
+}
+
+model Product {
+  id                Int          @id @default(autoincrement())
+  name              String
+  slug              String       @unique
+  categoryId        Int
+  brandId           Int?
+  addedByUserId     Int?
+  thumbnail         String? // URL (แทน thumbnailUploadId ใน MVP)
+  photos            Json?
+  videoProvider     String?
+  videoLink         String?
+  tags              String       @default("")
+  description       String       @default("")
+  unitPrice         Decimal
+  discount          Decimal      @default(0)
+  discountType      DiscountType @default(amount)
+  discountStartDate DateTime?
+  discountEndDate   DateTime?
+  tax               Decimal      @default(0)
+  taxType           TaxType      @default(percent)
+  colors            Json?
+  attributes        Json?
+  choiceOptions     Json?
+  variantProduct    Boolean      @default(false)
+  currentStock      Int          @default(0)
+  minQty            Int          @default(1)
+  lowStockQuantity  Int          @default(5)
+  shippingType      ShippingType @default(free)
+  shippingCost      Decimal      @default(0)
+  weight            Decimal      @default(0)
+  published         Boolean      @default(true)
+  featured          Boolean      @default(false)
+  todaysDeal        Boolean      @default(false)
+  cashOnDelivery    Boolean      @default(true)
+  numOfSale         Int          @default(0)
+  rating            Decimal      @default(0)
+  photoCredits      String?
+  metaTitle         String?
+  metaDescription   String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  deletedAt         DateTime?
+
+  category     Category             @relation(fields: [categoryId], references: [id])
+  brand        Brand?               @relation(fields: [brandId], references: [id])
+  stocks       ProductStock[]
+  translations ProductTranslation[]
+  reviews      Review[]
+  flashDeals   FlashDealProduct[]
+  carts        Cart[]
+  wishlists    Wishlist[]
+
+  @@index([categoryId, published])
+  @@index([todaysDeal, published])
+  @@index([featured])
+  @@map("products")
+}
+
+model ProductTranslation {
+  id          Int     @id @default(autoincrement())
+  productId   Int
+  lang        String
+  name        String
+  description String  @default("")
+  unit        String?
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, lang])
+  @@map("product_translations")
+}
+
+model ProductStock {
+  id        Int     @id @default(autoincrement())
+  productId Int
+  variant   String
+  sku       String  @unique
+  price     Decimal
+  qty       Int     @default(0)
+  image     String?
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_stocks")
+}
+
+model Review {
+  id        Int          @id @default(autoincrement())
+  productId Int
+  userId    Int
+  orderId   Int?
+  rating    Int
+  comment   String       @default("")
+  photos    Json?
+  status    ReviewStatus @default(pending)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  product   Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
+}
+
+model Cart {
+  id           Int      @id @default(autoincrement())
+  userId       Int?
+  tempUserId   String?
+  productId    Int
+  variation    String?
+  price        Decimal
+  tax          Decimal  @default(0)
+  shippingCost Decimal  @default(0)
+  quantity     Int
+  couponCode   String?
+  discount     Decimal  @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([tempUserId])
+  @@map("carts")
+}
+
+model Wishlist {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("wishlists")
+}
+
+model Order {
+  id              Int            @id @default(autoincrement())
+  code            String         @unique
+  userId          Int?
+  guestId         String?
+  shippingAddress Json
+  billingAddress  Json?
+  shippingType    String         @default("flat_rate")
+  deliveryStatus  DeliveryStatus @default(pending)
+  paymentType     String         @default("cod")
+  paymentStatus   PaymentStatus  @default(unpaid)
+  paymentDetails  Json?
+  subtotal        Decimal
+  tax             Decimal        @default(0)
+  shippingCost    Decimal        @default(0)
+  couponDiscount  Decimal        @default(0)
+  grandTotal      Decimal
+  currencyCode    String         @default("USD")
+  exchangeRate    Decimal        @default(1)
+  trackingCode    String?
+  notes           String?
+  viewed          Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  user     User?                @relation(fields: [userId], references: [id])
+  details  OrderDetail[]
+  history  OrderStatusHistory[]
+  payments Payment[]
+  refunds  RefundRequest[]
+
+  @@index([userId])
+  @@index([deliveryStatus])
+  @@index([paymentStatus])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderDetail {
+  id             Int            @id @default(autoincrement())
+  orderId        Int
+  productId      Int
+  productName    String
+  variation      String?
+  price          Decimal
+  tax            Decimal        @default(0)
+  shippingCost   Decimal        @default(0)
+  quantity       Int
+  deliveryStatus DeliveryStatus @default(pending)
+  paymentStatus  PaymentStatus  @default(unpaid)
+  order          Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_details")
+}
+
+model OrderStatusHistory {
+  id              Int      @id @default(autoincrement())
+  orderId         Int
+  status          String
+  note            String?
+  changedByUserId Int?
+  createdAt       DateTime @default(now())
+  order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_status_histories")
+}
+
+model Payment {
+  id            Int      @id @default(autoincrement())
+  orderId       Int
+  userId        Int?
+  amount        Decimal
+  method        String
+  transactionId String   @unique
+  status        String
+  payload       Json?
+  createdAt     DateTime @default(now())
+  order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model RefundRequest {
+  id            Int          @id @default(autoincrement())
+  orderId       Int
+  orderDetailId Int?
+  userId        Int
+  reason        String
+  refundAmount  Decimal
+  status        RefundStatus @default(pending)
+  adminNote     String?
+  createdAt     DateTime     @default(now())
+  order         Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("refund_requests")
+}
+
+model FlashDeal {
+  id              Int                @id @default(autoincrement())
+  title           String
+  slug            String             @unique
+  startDate       DateTime
+  endDate         DateTime
+  status          Boolean            @default(true)
+  featured        Boolean            @default(false)
+  backgroundColor String?
+  textColor       String?
+  banner          String?
+  products        FlashDealProduct[]
+
+  @@map("flash_deals")
+}
+
+model FlashDealProduct {
+  id           Int          @id @default(autoincrement())
+  flashDealId  Int
+  productId    Int
+  discount     Decimal
+  discountType DiscountType @default(percent)
+  flashDeal    FlashDeal    @relation(fields: [flashDealId], references: [id], onDelete: Cascade)
+  product      Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("flash_deal_products")
+}
+
+model Coupon {
+  id           Int           @id @default(autoincrement())
+  type         CouponType    @default(cart_base)
+  code         String        @unique
+  details      Json? // { minBuy, maxDiscount, productIds }
+  discount     Decimal
+  discountType DiscountType  @default(percent)
+  startDate    DateTime
+  endDate      DateTime
+  usageLimit   Int?
+  perUserLimit Int           @default(1)
+  usages       CouponUsage[]
+
+  @@map("coupons")
+}
+
+model CouponUsage {
+  id       Int    @id @default(autoincrement())
+  couponId Int
+  userId   Int?
+  orderId  Int
+  coupon   Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+
+  @@map("coupon_usages")
+}
+
+model Subscriber {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  @@map("subscribers")
+}
+
+model Slider {
+  id        Int     @id @default(autoincrement())
+  image     String
+  link      String  @default("/")
+  sortOrder Int     @default(0)
+  status    Boolean @default(true)
+  lang      String?
+
+  @@map("sliders")
+}
+
+model Banner {
+  id        Int            @id @default(autoincrement())
+  position  BannerPosition
+  image     String
+  link      String         @default("/")
+  sortOrder Int            @default(0)
+  status    Boolean        @default(true)
+
+  @@map("banners")
+}
+
+model HomeFeaturedCategory {
+  id         Int      @id @default(autoincrement())
+  categoryId Int      @unique
+  sortOrder  Int      @default(0)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@map("home_featured_categories")
+}
+
+model Page {
+  id              Int      @id @default(autoincrement())
+  title           String
+  slug            String   @unique
+  content         String   @default("")
+  type            PageType @default(custom)
+  metaTitle       String?
+  metaDescription String?
+
+  @@map("pages")
+}
+
+model BusinessSetting {
+  id    Int     @id @default(autoincrement())
+  type  String  @unique
+  value String
+  lang  String?
+
+  @@map("business_settings")
+}
+
+model Language {
+  id     Int     @id @default(autoincrement())
+  name   String
+  code   String  @unique
+  flag   String
+  rtl    Boolean @default(false)
+  status Boolean @default(true)
+
+  @@map("languages")
+}
+
+model Translation {
+  id        Int    @id @default(autoincrement())
+  lang      String
+  langKey   String
+  langValue String
+
+  @@unique([lang, langKey])
+  @@map("translations")
+}
+
+model Currency {
+  id                Int     @id @default(autoincrement())
+  name              String
+  symbol            String
+  code              String  @unique
+  exchangeRate      Decimal
+  status            Boolean @default(true)
+  symbolPosition    String  @default("before")
+  decimalPlaces     Int     @default(2)
+  decimalSeparator  String  @default(".")
+  thousandSeparator String  @default(",")
+
+  @@map("currencies")
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  replied   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("contacts")
+}
+
+model ActivityLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  action    String
+  subject   String?
+  createdAt DateTime @default(now())
+
+  @@map("activity_logs")
+}

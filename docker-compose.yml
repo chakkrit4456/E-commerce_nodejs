@@ -1,0 +1,9 @@
+# สำหรับ production-like: MySQL 8 + Redis 7 (เปลี่ยน provider ใน apps/api/prisma/schema.prisma เป็น "mysql")
+services:
+  mysql:
+    image: mysql:8
+    environment: { MYSQL_ROOT_PASSWORD: root, MYSQL_DATABASE: ecom }
+    ports: ["3306:3306"]
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]

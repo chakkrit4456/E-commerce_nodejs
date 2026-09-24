@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Noto+Sans+Thai:wght@400;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #e62e04;
+}
+
+body {
+  @apply bg-body font-sans text-[13px] text-ink-secondary antialiased;
+}
+
+@layer components {
+  .ae-card {
+    @apply rounded-card bg-white shadow-card;
+  }
+  .ae-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-card bg-primary px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .ae-btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-card border border-line bg-white px-4 py-2 text-[13px] font-semibold text-ink transition-colors hover:border-primary hover:text-primary;
+  }
+  .ae-input {
+    @apply h-10 w-full rounded-card border border-line bg-white px-3 text-[13px] text-ink outline-none focus:border-primary focus-visible:ring-1 focus-visible:ring-primary;
+  }
+  .ae-label {
+    @apply mb-1 block text-[12px] font-semibold text-ink;
+  }
+  .ae-h {
+    @apply text-base font-bold text-ink;
+  }
+}
+
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Swiper (ตาม 07-UI-UX §5.4: ลูกศรวงกลมขาว 36px, dots 8px) */
+.hero-swiper .swiper-button-prev,
+.hero-swiper .swiper-button-next {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: #fff;
+  color: #4a4a5a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+.hero-swiper .swiper-button-prev::after,
+.hero-swiper .swiper-button-next::after {
+  font-size: 14px;
+  font-weight: 700;
+}
+.hero-swiper .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.6);
+  opacity: 1;
+}
+.hero-swiper .swiper-pagination-bullet-active {
+  background: var(--primary);
+}
+
+.thin-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+}
+
+@keyframes badge-pop {
+  0% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+.badge-pop {
+  animation: badge-pop 0.25s ease-out;
+}

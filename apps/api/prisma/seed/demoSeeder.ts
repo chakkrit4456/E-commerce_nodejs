@@ -50,10 +50,44 @@ async function main() {
   }
   await prisma.userRole.create({ data: { userId: staff.id, roleId: orderManager.id } });
 
-  // Categories (11 หมวดบน + ลูกบางส่วน)
+  // ภาพจริงจาก prisma/seed/images → uploads/ + ตาราง uploads (ต้องตั้งค่าก่อนสร้างหมวดหมู่ เพราะ banner หมวดหมู่ก็ใช้ภาพจริงด้วย)
+  const imagesDir = path.join(__dirname, 'images');
+  const uploadDir = path.resolve(process.env.UPLOAD_DIR ?? path.join(process.cwd(), 'uploads'));
+  fs.mkdirSync(uploadDir, { recursive: true });
+  const credits: Record<string, { file: string; license: string; author: string; page: string }[]> = JSON.parse(fs.readFileSync(path.join(imagesDir, 'credits.json'), 'utf8'));
+  const copyImage = async (file: string): Promise<string> => {
+    const name = `${crypto.randomUUID()}.jpg`;
+    const buf = fs.readFileSync(path.join(imagesDir, file));
+    fs.writeFileSync(path.join(uploadDir, name), buf);
+    await prisma.upload.create({ data: { fileOriginalName: file, fileName: `/uploads/${name}`, extension: 'jpg', type: 'image', fileSize: buf.length, userId: admin.id } });
+    return `/uploads/${name}`;
+  };
+
+  // Categories (11 หมวดบน + ลูกบางส่วน) — banner ใช้ภาพสินค้าจริงที่ใกล้เคียงที่สุดในชุดที่มี แทน placeholder
+  const CATEGORY_BANNER_IMAGE: Record<string, string> = {
+    'Women Clothing & Fashion': 'navy-floral-summer-dress-1.jpg',
+    'Men Clothing & Fashion': 'mens-gingham-dress-shirt-purple-1.jpg',
+    'Computer & Accessories': 'dell-inspiron-1525-laptop-1.jpg',
+    'Automobile & Motorcycle': 'white-ferrari-f12-sports-car-1.jpg',
+    'Kids & toy': 'vintage-gottschalk-dollhouse-1.jpg',
+    'Sports & outdoor': 'cube-mountain-bike-1.jpg',
+    'Jewelry & Watches': 'junghans-mega-wristwatch-1.jpg',
+    'Cellphones & Tabs': 'apple-iphone-11-pro-1.jpg',
+    'Beauty, Health & Hair': 'day-cream-jar-1.jpg',
+    'Home Improvement & Tools': 'panasonic-cordless-drill-driver-1.jpg',
+    'Home decoration & Appliance': 'amazon-echo-dot-speaker-1.jpg',
+    'Women Dress': 'navy-floral-summer-dress-1.jpg',
+    'Women Watches': 'citizen-quartz-two-tone-wristwatch-1.jpg',
+    'Men Formal': 'mens-chino-pants-grey-1.jpg',
+    'Mobile Phones': 'apple-iphone-11-pro-1.jpg',
+    'Baby Dress': 'baby-clothes-set-1.jpg',
+    'Doll': 'vintage-gottschalk-dollhouse-1.jpg',
+    'Tools': 'red-cordless-drill-with-charger-1.jpg',
+  };
   const cat: Record<string, number> = {};
   for (const [i, [key, thaiName, icon]] of TOP_CATEGORIES.entries()) {
-    const c = await prisma.category.create({ data: { name: thaiName, slug: slug(key), icon, orderLevel: i, level: 0, banner: img('96x96', key.split(' ')[0], 'FDE3DC') } });
+    const banner = await copyImage(CATEGORY_BANNER_IMAGE[key]);
+    const c = await prisma.category.create({ data: { name: thaiName, slug: slug(key), icon, orderLevel: i, level: 0, banner } });
     cat[key] = c.id;
   }
   const kids: [string, string, string][] = [
@@ -61,7 +95,8 @@ async function main() {
     ['Mobile Phones', 'โทรศัพท์มือถือ', 'Cellphones & Tabs'], ['Baby Dress', 'ชุดเด็กอ่อน', 'Kids & toy'], ['Doll', 'ตุ๊กตา', 'Kids & toy'], ['Tools', 'เครื่องมือช่าง', 'Home Improvement & Tools'],
   ];
   for (const [i, [key, thaiName, parentKey]] of kids.entries()) {
-    const c = await prisma.category.create({ data: { name: thaiName, slug: slug(key), parentId: cat[parentKey], level: 1, orderLevel: i, banner: img('96x96', key.split(' ')[0], 'FDE3DC') } });
+    const banner = await copyImage(CATEGORY_BANNER_IMAGE[key]);
+    const c = await prisma.category.create({ data: { name: thaiName, slug: slug(key), parentId: cat[parentKey], level: 1, orderLevel: i, banner } });
     cat[key] = c.id;
   }
   // Featured strip (8)
@@ -76,20 +111,12 @@ async function main() {
   const size = await prisma.attribute.create({ data: { name: 'Size' } });
   await prisma.attributeValue.createMany({ data: ['S', 'M', 'L', 'XL'].map((value) => ({ attributeId: size.id, value })) });
 
-  // Products (ภาพจริงจาก prisma/seed/images → uploads/ + ตาราง uploads)
-  const imagesDir = path.join(__dirname, 'images');
-  const uploadDir = path.resolve(process.env.UPLOAD_DIR ?? path.join(process.cwd(), 'uploads'));
-  fs.mkdirSync(uploadDir, { recursive: true });
-  const credits: Record<string, { file: string; license: string; author: string; page: string }[]> = JSON.parse(fs.readFileSync(path.join(imagesDir, 'credits.json'), 'utf8'));
+  // Products
   const created: Awaited<ReturnType<typeof prisma.product.create>>[] = [];
   for (const p of SEED_PRODUCTS) {
     const photos: string[] = [];
     for (const c of credits[p.slug] ?? []) {
-      const name = `${crypto.randomUUID()}.jpg`;
-      const buf = fs.readFileSync(path.join(imagesDir, c.file));
-      fs.writeFileSync(path.join(uploadDir, name), buf);
-      await prisma.upload.create({ data: { fileOriginalName: c.file, fileName: `/uploads/${name}`, extension: 'jpg', type: 'image', fileSize: buf.length, userId: admin.id } });
-      photos.push(`/uploads/${name}`);
+      photos.push(await copyImage(c.file));
     }
     if (!photos.length) throw new Error(`No images for ${p.slug}`);
     const photoCredits = (credits[p.slug] ?? []).map((c) => (c.license.startsWith('CC0') ? `Photo: ${c.page} (CC0)` : `Photo: ${c.author} — ${c.license} — ${c.page}`)).join(String.fromCharCode(10));

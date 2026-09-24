@@ -158,4 +158,9 @@ export const SEED_PRODUCTS: SeedProduct[] = [
     price: 89, discountPercent: 20, stock: 24, featured: true, tags: 'sneakers,shoes,leather,beige,footwear',
     description: 'Beige-and-white leather low-top sneakers with a white rubber sole and a small orange tab at the heel, shown from the side and paired at an angle.',
   },
+  {
+    slug: 'white-ferrari-f12-sports-car', name: 'White Ferrari F12 Sports Car', category: 'Automobile & Motorcycle', brand: 'Ferrari',
+    price: 289000, stock: 1, featured: true, tags: 'car,ferrari,sports car,automobile,supercar',
+    description: 'White Ferrari F12-style sports car photographed from the side in a concrete garage, showing its long bonnet, grey alloy wheels with yellow brake calipers, and red leather interior trim.',
+  },
 ];

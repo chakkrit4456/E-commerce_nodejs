@@ -64,32 +64,32 @@ export default function SearchBox() {
       <div className="flex">
         <input
           className="ae-input rounded-r-none"
-          placeholder={t('search_placeholder', 'I am shopping for...')}
+          placeholder={t('search_placeholder', 'ค้นหาสินค้า...')}
           value={q}
           onChange={(e) => { setQ(e.target.value); setOpen(true); }}
           onFocus={() => setOpen(true)}
-          aria-label="Search products"
+          aria-label="ค้นหาสินค้า"
         />
-        <button type="submit" aria-label="Search" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-r-card bg-primary text-white hover:bg-primary-hover">
+        <button type="submit" aria-label="ค้นหา" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-r-card bg-primary text-white hover:bg-primary-hover">
           <Search size={18} strokeWidth={2.5} aria-hidden />
         </button>
       </div>
       {open && debounced.length >= 2 && (
         <div className="absolute left-0 right-0 top-11 z-40 max-h-[70vh] overflow-y-auto rounded-card border border-line bg-white p-3 shadow-hover">
           {loading && !result && <div className="h-16 animate-pulse rounded bg-body" />}
-          {empty && <p className="py-3 text-center text-ink-muted">No results for “{debounced}”</p>}
+          {empty && <p className="py-3 text-center text-ink-muted">ไม่พบผลลัพธ์สำหรับ “{debounced}”</p>}
           {result && result.categories.length > 0 && (
-            <Section title="Categories">
+            <Section title="หมวดหมู่">
               {result.categories.map((c) => <Link key={c.id} onClick={() => setOpen(false)} href={`/products?category=${c.slug}`} className="block py-1 hover:text-primary">{c.name}</Link>)}
             </Section>
           )}
           {result && result.brands.length > 0 && (
-            <Section title="Brands">
+            <Section title="แบรนด์">
               {result.brands.map((b) => <Link key={b.id} onClick={() => setOpen(false)} href={`/products?brand=${b.slug}`} className="block py-1 hover:text-primary">{b.name}</Link>)}
             </Section>
           )}
           {result && result.products.length > 0 && (
-            <Section title="Products">
+            <Section title="สินค้า">
               {result.products.map((p) => (
                 <Link key={p.id} onClick={() => setOpen(false)} href={`/product/${p.slug}`} className="flex items-center gap-2 py-1 hover:text-primary">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -98,7 +98,7 @@ export default function SearchBox() {
                   <Price value={p.price} />
                 </Link>
               ))}
-              <Link onClick={() => setOpen(false)} href={`/products?q=${encodeURIComponent(debounced)}`} className="mt-1 block text-center font-semibold text-primary">View all results</Link>
+              <Link onClick={() => setOpen(false)} href={`/products?q=${encodeURIComponent(debounced)}`} className="mt-1 block text-center font-semibold text-primary">ดูผลลัพธ์ทั้งหมด</Link>
             </Section>
           )}
         </div>

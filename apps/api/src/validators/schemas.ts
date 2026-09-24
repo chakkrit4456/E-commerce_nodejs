@@ -49,9 +49,9 @@ export const addressSchema = z.object({
 
 export const checkoutSchema = z.object({
   shippingAddress: addressSchema,
-  paymentType: z.enum(['cod']).default('cod'),
+  paymentType: z.enum(['cod', 'promptpay', 'bank_transfer']).default('cod'),
   couponCode: z.string().optional(),
-  currencyCode: z.string().default('USD'),
+  currencyCode: z.string().default('THB'),
   notes: z.string().max(500).optional(),
   guestEmail: z.string().email().optional(),
 });

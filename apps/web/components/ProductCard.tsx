@@ -22,15 +22,15 @@ export default function ProductCard({ p }: { p: ProductDTO }) {
 
   const wish = async () => {
     if (!token) {
-      toast('Please login to use wishlist');
+      toast('กรุณาเข้าสู่ระบบเพื่อใช้รายการโปรด');
       return router.push('/login');
     }
     try {
       const r = await api<{ wishlisted: boolean; count: number }>('/me/wishlist/toggle', { body: { productId: p.id } });
       setWishlistCount(r.count);
-      toast.success(r.wishlisted ? 'Added to wishlist' : 'Removed from wishlist');
+      toast.success(r.wishlisted ? 'เพิ่มในรายการโปรดแล้ว' : 'นำออกจากรายการโปรดแล้ว');
     } catch (e) {
-      toast.error(e instanceof ApiError ? e.message : 'Failed');
+      toast.error(e instanceof ApiError ? e.message : 'ไม่สำเร็จ');
     }
   };
 
@@ -47,17 +47,17 @@ export default function ProductCard({ p }: { p: ProductDTO }) {
           <span className="absolute left-2 top-2 rounded-[3px] bg-primary px-1.5 py-0.5 text-[11px] font-bold text-white">-{p.discountPercent}%</span>
         )}
         <div className="absolute right-2 top-2 flex flex-col gap-1.5 opacity-100 transition md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100">
-          <button className={btn} onClick={wish} aria-label="Add to wishlist">
+          <button className={btn} onClick={wish} aria-label="เพิ่มในรายการโปรด">
             <Heart size={16} />
           </button>
           <button
             className={`${btn} ${inCompare ? '!bg-primary !text-white' : ''}`}
-            aria-label="Add to compare"
-            onClick={() => toast.success(toggleCompare(p.id) === 'added' ? 'Added to compare' : 'Removed from compare')}
+            aria-label="เพิ่มในการเปรียบเทียบ"
+            onClick={() => toast.success(toggleCompare(p.id) === 'added' ? 'เพิ่มในการเปรียบเทียบแล้ว' : 'นำออกจากการเปรียบเทียบแล้ว')}
           >
             <ArrowLeftRight size={16} />
           </button>
-          <button className={btn} onClick={() => add(p.id)} aria-label={t('add_to_cart', 'Add to cart')} disabled={p.currentStock < 1}>
+          <button className={btn} onClick={() => add(p.id)} aria-label={t('add_to_cart', 'ใส่ตะกร้า')} disabled={p.currentStock < 1}>
             <ShoppingCart size={16} />
           </button>
         </div>
@@ -68,7 +68,7 @@ export default function ProductCard({ p }: { p: ProductDTO }) {
         <div className="mt-1 text-[15px]">
           <Price value={p.price} original={p.originalPrice} />
         </div>
-        {p.currentStock < 1 && <p className="mt-1 text-[12px] text-danger">Out of stock</p>}
+        {p.currentStock < 1 && <p className="mt-1 text-[12px] text-danger">สินค้าหมด</p>}
       </div>
     </article>
   );

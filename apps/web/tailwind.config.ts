@@ -15,7 +15,7 @@ const config: Config = {
         warning: '#FFA707',
         danger: '#EF486A',
       },
-      fontFamily: { sans: ['"Open Sans"', 'system-ui', '-apple-system', '"Segoe UI"', 'Roboto', '"Noto Sans Thai"', 'sans-serif'] },
+      fontFamily: { sans: ['"Noto Sans Thai"', '"Open Sans"', 'system-ui', '-apple-system', '"Segoe UI"', 'Roboto', 'sans-serif'] },
       boxShadow: { card: '0 1px 3px rgba(0,0,0,.06)', hover: '0 6px 16px rgba(0,0,0,.10)' },
       borderRadius: { card: '4px' },
     },

@@ -9,10 +9,10 @@ import { Price } from './Price';
 export default function TodaysDeal({ products }: { products: ProductDTO[] }) {
   const t = useT();
   return (
-    <section className="ae-card flex h-full max-h-[560px] flex-col overflow-hidden" aria-label="Todays Deal">
+    <section className="ae-card flex h-full max-h-[560px] flex-col overflow-hidden" aria-label="ดีลวันนี้">
       <div className="flex h-11 shrink-0 items-center gap-2 bg-primary-soft px-3">
-        <h2 className="ae-h">Todays Deal</h2>
-        <span className="rounded-[3px] bg-primary px-1.5 py-0.5 text-[10px] font-bold text-white">{t('hot', 'Hot')}</span>
+        <h2 className="ae-h">{t('todays_deal', 'ดีลวันนี้')}</h2>
+        <span className="rounded-[3px] bg-primary px-1.5 py-0.5 text-[10px] font-bold text-white">{t('hot', 'ฮอต')}</span>
       </div>
       <ul className="thin-scroll flex flex-1 flex-col gap-1.5 overflow-y-auto bg-primary p-1.5">
         {products.map((p) => (
@@ -26,7 +26,7 @@ export default function TodaysDeal({ products }: { products: ProductDTO[] }) {
             </Link>
           </li>
         ))}
-        {!products.length && <li className="p-4 text-center text-white">No deals today</li>}
+        {!products.length && <li className="p-4 text-center text-white">วันนี้ไม่มีดีล</li>}
       </ul>
     </section>
   );

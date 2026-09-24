@@ -11,7 +11,7 @@ import type { HomeData } from '@/lib/types';
 export default async function HomePage() {
   const home = await serverGet<HomeData>('/home');
   if (!home) {
-    return <p className="ae-card p-8 text-center">Store is temporarily unavailable. Please try again shortly.</p>;
+    return <p className="ae-card p-8 text-center">ร้านค้าไม่พร้อมใช้งานชั่วคราว กรุณาลองใหม่อีกครั้ง</p>;
   }
   const dealEnabled = home.settings.todays_deal_enabled !== '0';
 
@@ -34,7 +34,7 @@ export default async function HomePage() {
       {home.flashDeal && <FlashSale deal={home.flashDeal} />}
 
       <section className="ae-card p-4">
-        <h2 className="ae-h mb-3">Best Selling</h2>
+        <h2 className="ae-h mb-3">สินค้าขายดี</h2>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4 xl:grid-cols-5">
           {home.bestSelling.map((p) => <ProductCard key={p.id} p={p} />)}
         </div>

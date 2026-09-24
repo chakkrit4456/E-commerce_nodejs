@@ -1,5 +1,5 @@
 {
-  "name": "active-ecommerce",
+  "name": "jitd-ecommerce",
   "private": true,
   "engines": { "node": ">=20.0.0" },
   "workspaces": [

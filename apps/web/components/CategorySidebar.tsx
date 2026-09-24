@@ -12,10 +12,10 @@ export default function CategorySidebar({ categories }: { categories: HomeData['
   const current = categories.find((c) => c.id === active);
 
   return (
-    <aside className="ae-card relative hidden lg:block" onMouseLeave={() => setActive(null)} aria-label="Categories">
+    <aside className="ae-card relative hidden lg:block" onMouseLeave={() => setActive(null)} aria-label="หมวดหมู่สินค้า">
       <div className="flex h-11 items-center justify-between rounded-t-card bg-primary-soft px-3">
-        <h2 className="ae-h">{t('categories', 'Categories')}</h2>
-        <Link href="/categories" className="text-[12px] text-ink-secondary hover:text-primary">{t('see_all', 'See All')} &gt;</Link>
+        <h2 className="ae-h">{t('categories', 'หมวดหมู่')}</h2>
+        <Link href="/categories" className="text-[12px] text-ink-secondary hover:text-primary">{t('see_all', 'ดูทั้งหมด')} &gt;</Link>
       </div>
       <ul className="py-1">
         {categories.map((c) => (

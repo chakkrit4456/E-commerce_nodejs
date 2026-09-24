@@ -11,7 +11,7 @@ interface CmsPage {
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const p = await serverGet<CmsPage>(`/pages/${params.slug}`);
-  return { title: p?.metaTitle ?? p?.title ?? 'Page', description: p?.metaDescription ?? undefined };
+  return { title: p?.metaTitle ?? p?.title ?? 'หน้า', description: p?.metaDescription ?? undefined };
 }
 
 export default async function CmsPageView({ params }: { params: { slug: string } }) {

@@ -7,6 +7,8 @@ import toast from 'react-hot-toast';
 import { api, ApiError } from '@/lib/api';
 import { useMounted, usePrice } from '@/lib/hooks';
 import { useSession } from '@/lib/store';
+import { formatThaiDateTime } from '@/lib/format-date';
+import { deliveryLabel } from '@/lib/labels';
 
 interface Order {
   id: number;
@@ -37,13 +39,13 @@ export default function AccountPage() {
   }, [mounted, user, router]);
 
   const refund = async (orderId: number) => {
-    const reason = window.prompt('Reason for refund request?');
+    const reason = window.prompt('เหตุผลในการขอคืนเงิน?');
     if (!reason || reason.length < 3) return;
     try {
       await api('/me/refunds', { body: { orderId, reason } });
-      toast.success('Refund request submitted');
+      toast.success('ส่งคำขอคืนเงินแล้ว');
     } catch (e) {
-      toast.error(e instanceof ApiError ? e.message : 'Failed');
+      toast.error(e instanceof ApiError ? e.message : 'ไม่สำเร็จ');
     }
   };
 
@@ -52,14 +54,14 @@ export default function AccountPage() {
   return (
     <div className="space-y-4">
       <div className="ae-card p-4">
-        <h1 className="text-lg font-bold text-ink">Hello, {user.name}</h1>
+        <h1 className="text-lg font-bold text-ink">สวัสดี, {user.name}</h1>
         <p className="text-ink-muted">{user.email}</p>
       </div>
       <section className="ae-card p-4">
-        <h2 className="ae-h mb-3">Purchase history</h2>
+        <h2 className="ae-h mb-3">ประวัติการสั่งซื้อ</h2>
         {orders === null && <div className="h-16 animate-pulse rounded bg-body" />}
         {orders?.length === 0 && (
-          <p className="py-6 text-center text-ink-muted">No orders yet. <Link href="/products" className="text-primary">Start shopping</Link></p>
+          <p className="py-6 text-center text-ink-muted">ยังไม่มีคำสั่งซื้อ <Link href="/products" className="text-primary">เริ่มเลือกซื้อสินค้า</Link></p>
         )}
         <ul className="divide-y divide-line">
           {orders?.map((o) => (
@@ -67,11 +69,11 @@ export default function AccountPage() {
               <div className="min-w-0 flex-1">
                 <p className="font-semibold text-ink">{o.code}</p>
                 <p className="truncate text-ink-muted">{o.details.map((d) => `${d.productName} × ${d.quantity}`).join(', ')}</p>
-                <p className="text-[12px] text-ink-muted">{new Date(o.createdAt).toLocaleString()}</p>
+                <p className="text-[12px] text-ink-muted">{formatThaiDateTime(o.createdAt)}</p>
               </div>
-              <span className={`rounded px-2 py-0.5 text-[12px] font-semibold ${badge[o.deliveryStatus] ?? ''}`}>{o.deliveryStatus.replace('_', ' ')}</span>
+              <span className={`rounded px-2 py-0.5 text-[12px] font-semibold ${badge[o.deliveryStatus] ?? ''}`}>{deliveryLabel(o.deliveryStatus)}</span>
               <span className="w-28 text-right font-bold text-primary">{fmt(Number(o.grandTotal))}</span>
-              {o.deliveryStatus === 'delivered' && o.paymentStatus !== 'refunded' && <button className="ae-btn-outline" onClick={() => refund(o.id)}>Request refund</button>}
+              {o.deliveryStatus === 'delivered' && o.paymentStatus !== 'refunded' && <button className="ae-btn-outline" onClick={() => refund(o.id)}>ขอคืนเงิน</button>}
             </li>
           ))}
         </ul>

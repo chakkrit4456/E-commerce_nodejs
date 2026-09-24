@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { api } from '@/lib/api';
 import { usePrice } from '@/lib/hooks';
+import { deliveryLabel } from '@/lib/labels';
 
 interface Dash {
   salesToday: number;
@@ -24,15 +25,15 @@ export default function Dashboard() {
   const { data, error, isLoading } = useQuery({ queryKey: ['dash'], queryFn: () => api<Dash>('/admin/dashboard') });
 
   if (isLoading) return <div className="ae-card h-40 animate-pulse" />;
-  if (error || !data) return <p className="ae-card p-6 text-danger">You do not have access to the dashboard.</p>;
+  if (error || !data) return <p className="ae-card p-6 text-danger">คุณไม่มีสิทธิ์เข้าถึงแดชบอร์ด</p>;
 
   const kpi = [
-    ['Sales today', fmt(data.salesToday)],
-    ['Orders today', String(data.ordersToday)],
-    ['Sales this month', fmt(data.salesMonth)],
-    ['New customers', String(data.newCustomers)],
+    ['ยอดขายวันนี้', fmt(data.salesToday)],
+    ['ออเดอร์วันนี้', String(data.ordersToday)],
+    ['ยอดขายเดือนนี้', fmt(data.salesMonth)],
+    ['ลูกค้าใหม่', String(data.newCustomers)],
   ];
-  const pie = Object.entries(data.ordersByStatus).map(([name, value]) => ({ name, value }));
+  const pie = Object.entries(data.ordersByStatus).map(([name, value]) => ({ name: deliveryLabel(name), value }));
 
   return (
     <div className="space-y-4">
@@ -43,7 +44,7 @@ export default function Dashboard() {
       </div>
       <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
         <section className="ae-card p-4">
-          <h2 className="ae-h mb-2">Sales — last 12 months</h2>
+          <h2 className="ae-h mb-2">ยอดขาย — 12 เดือนล่าสุด</h2>
           <div className="h-64">
             <ResponsiveContainer>
               <BarChart data={data.monthlySales}>
@@ -57,8 +58,8 @@ export default function Dashboard() {
           </div>
         </section>
         <section className="ae-card p-4">
-          <h2 className="ae-h mb-2">Orders by status</h2>
-          {pie.length === 0 ? <p className="text-ink-muted">No orders yet.</p> : (
+          <h2 className="ae-h mb-2">ออเดอร์แยกตามสถานะ</h2>
+          {pie.length === 0 ? <p className="text-ink-muted">ยังไม่มีออเดอร์</p> : (
             <div className="h-64">
               <ResponsiveContainer>
                 <PieChart>
@@ -74,12 +75,12 @@ export default function Dashboard() {
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <section className="ae-card p-4">
-          <h2 className="ae-h mb-2">Top products</h2>
-          <ol className="list-decimal space-y-1 pl-5">{data.topProducts.map((p) => <li key={p.id}>{p.name} <span className="text-ink-muted">({p.numOfSale} sold)</span></li>)}</ol>
+          <h2 className="ae-h mb-2">สินค้าขายดี</h2>
+          <ol className="list-decimal space-y-1 pl-5">{data.topProducts.map((p) => <li key={p.id}>{p.name} <span className="text-ink-muted">(ขายแล้ว {p.numOfSale} ชิ้น)</span></li>)}</ol>
         </section>
         <section className="ae-card p-4">
-          <h2 className="ae-h mb-2">Low stock</h2>
-          {data.lowStock.length === 0 ? <p className="text-ink-muted">All products well stocked.</p> : (
+          <h2 className="ae-h mb-2">สินค้าใกล้หมด</h2>
+          {data.lowStock.length === 0 ? <p className="text-ink-muted">สต็อกสินค้ายังเพียงพอทุกรายการ</p> : (
             <ul className="space-y-1">{data.lowStock.map((p) => <li key={p.id} className="flex justify-between"><span>{p.name}</span><span className="font-bold text-danger">{p.currentStock}</span></li>)}</ul>
           )}
         </section>

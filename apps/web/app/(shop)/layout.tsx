@@ -7,7 +7,7 @@ import type { HomeData } from '@/lib/types';
 
 export default async function ShopLayout({ children }: { children: React.ReactNode }) {
   const home = await serverGet<HomeData>('/home');
-  const siteName = home?.settings.site_name ?? 'Active eCommerce';
+  const siteName = home?.settings.site_name ?? 'JITD eCommerce';
   return (
     <>
       <TopBar />

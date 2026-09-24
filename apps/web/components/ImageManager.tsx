@@ -18,8 +18,8 @@ export default function ImageManager({ photos, onChange }: { photos: string[]; o
 
   const check = (files: File[]): File[] =>
     files.filter((f) => {
-      if (!ACCEPT.split(',').includes(f.type)) return toast.error(`${f.name}: only JPG, PNG, WebP or GIF`), false;
-      if (f.size > MAX_BYTES) return toast.error(`${f.name}: larger than 5MB`), false;
+      if (!ACCEPT.split(',').includes(f.type)) return toast.error(`${f.name}: รองรับเฉพาะไฟล์ JPG, PNG, WebP หรือ GIF`), false;
+      if (f.size > MAX_BYTES) return toast.error(`${f.name}: ไฟล์ใหญ่เกิน 5MB`), false;
       return true;
     });
 
@@ -31,7 +31,7 @@ export default function ImageManager({ photos, onChange }: { photos: string[]; o
       const up = await uploadImages(files);
       onChange([...photos, ...up.map((u) => u.url)]);
     } catch (e) {
-      toast.error(e instanceof ApiError ? e.message : 'Upload failed');
+      toast.error(e instanceof ApiError ? e.message : 'อัปโหลดไม่สำเร็จ');
     } finally {
       setBusy(false);
       if (addRef.current) addRef.current.value = '';
@@ -47,7 +47,7 @@ export default function ImageManager({ photos, onChange }: { photos: string[]; o
       const [u] = await uploadImages([file]);
       onChange(photos.map((p, i) => (i === idx ? u.url : p)));
     } catch (e) {
-      toast.error(e instanceof ApiError ? e.message : 'Upload failed');
+      toast.error(e instanceof ApiError ? e.message : 'อัปโหลดไม่สำเร็จ');
     } finally {
       setBusy(false);
       setReplaceAt(null);
@@ -59,23 +59,23 @@ export default function ImageManager({ photos, onChange }: { photos: string[]; o
 
   return (
     <div>
-      <span className="ae-label">Images ({photos.length}/{MAX_IMAGES}) — the first image is the main image</span>
+      <span className="ae-label">รูปภาพ ({photos.length}/{MAX_IMAGES}) — รูปแรกจะเป็นรูปหลัก</span>
       <ul className="flex flex-wrap gap-3">
         {photos.map((src, i) => (
           <li key={`${src}-${i}`} className={`relative h-28 w-28 overflow-hidden rounded-card border-2 ${i === 0 ? 'border-primary' : 'border-line'}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={src} alt={`Product image ${i + 1}`} className="h-full w-full object-cover" />
-            {i === 0 && <span className="absolute left-1 top-1 rounded bg-primary px-1.5 text-[10px] font-bold text-white">Main</span>}
+            <img src={src} alt={`รูปสินค้า ${i + 1}`} className="h-full w-full object-cover" />
+            {i === 0 && <span className="absolute left-1 top-1 rounded bg-primary px-1.5 text-[10px] font-bold text-white">หลัก</span>}
             <div className="absolute inset-x-0 bottom-1 flex justify-center gap-1">
               {i !== 0 && (
-                <button type="button" className={iconBtn} title="Set as main" aria-label="Set as main image" onClick={() => onChange([src, ...photos.filter((_, j) => j !== i)])}>
+                <button type="button" className={iconBtn} title="ตั้งเป็นรูปหลัก" aria-label="ตั้งเป็นรูปหลัก" onClick={() => onChange([src, ...photos.filter((_, j) => j !== i)])}>
                   <Star size={14} />
                 </button>
               )}
-              <button type="button" className={iconBtn} title="Replace" aria-label="Replace image" disabled={busy} onClick={() => { setReplaceAt(i); replaceRef.current?.click(); }}>
+              <button type="button" className={iconBtn} title="เปลี่ยนรูป" aria-label="เปลี่ยนรูปภาพ" disabled={busy} onClick={() => { setReplaceAt(i); replaceRef.current?.click(); }}>
                 <Replace size={14} />
               </button>
-              <button type="button" className={iconBtn} title="Remove" aria-label="Remove image" onClick={() => onChange(photos.filter((_, j) => j !== i))}>
+              <button type="button" className={iconBtn} title="ลบ" aria-label="ลบรูปภาพ" onClick={() => onChange(photos.filter((_, j) => j !== i))}>
                 <Trash2 size={14} />
               </button>
             </div>
@@ -85,14 +85,14 @@ export default function ImageManager({ photos, onChange }: { photos: string[]; o
           <li>
             <button type="button" disabled={busy} onClick={() => addRef.current?.click()} className="flex h-28 w-28 flex-col items-center justify-center gap-1 rounded-card border-2 border-dashed border-line text-ink-muted hover:border-primary hover:text-primary disabled:opacity-60">
               {busy ? <span className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" /> : <ImagePlus size={24} />}
-              <span className="text-[12px]">{busy ? 'Uploading…' : 'Upload'}</span>
+              <span className="text-[12px]">{busy ? 'กำลังอัปโหลด…' : 'อัปโหลด'}</span>
             </button>
           </li>
         )}
       </ul>
       <input ref={addRef} type="file" accept={ACCEPT} multiple hidden onChange={(e) => add(e.target.files)} />
       <input ref={replaceRef} type="file" accept={ACCEPT} hidden onChange={(e) => replace(e.target.files)} />
-      <p className="mt-1 text-[12px] text-ink-muted">JPG, PNG, WebP or GIF, up to 5MB each.</p>
+      <p className="mt-1 text-[12px] text-ink-muted">รองรับไฟล์ JPG, PNG, WebP หรือ GIF ขนาดไม่เกิน 5MB ต่อรูป</p>
     </div>
   );
 }

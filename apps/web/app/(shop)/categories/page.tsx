@@ -4,13 +4,13 @@ import { CategoryIcon } from '@/components/Icons';
 import { serverGet } from '@/lib/api';
 import type { HomeData } from '@/lib/types';
 
-export const metadata: Metadata = { title: 'All Categories' };
+export const metadata: Metadata = { title: 'หมวดหมู่ทั้งหมด' };
 
 export default async function CategoriesPage() {
   const home = await serverGet<HomeData>('/home');
   return (
     <div className="space-y-3">
-      <h1 className="ae-h">All Categories</h1>
+      <h1 className="ae-h">หมวดหมู่ทั้งหมด</h1>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {home?.categories.map((c) => (
           <section key={c.id} className="ae-card p-4">

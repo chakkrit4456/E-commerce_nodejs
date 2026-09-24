@@ -18,11 +18,11 @@ export default function WishlistPage() {
   }, [mounted, token]);
 
   if (!mounted) return null;
-  if (!token) return <div className="ae-card p-10 text-center">Please <Link href="/login" className="text-primary">login</Link> to see your wishlist.</div>;
+  if (!token) return <div className="ae-card p-10 text-center">กรุณา <Link href="/login" className="text-primary">เข้าสู่ระบบ</Link> เพื่อดูรายการโปรดของคุณ</div>;
   return (
     <section>
-      <h1 className="ae-h mb-3">Wishlist</h1>
-      {items?.length === 0 && <div className="ae-card p-10 text-center text-ink-muted">Your wishlist is empty.</div>}
+      <h1 className="ae-h mb-3">รายการโปรด</h1>
+      {items?.length === 0 && <div className="ae-card p-10 text-center text-ink-muted">ยังไม่มีสินค้าในรายการโปรด</div>}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 xl:grid-cols-5">{items?.map((p) => <ProductCard key={p.id} p={p} />)}</div>
     </section>
   );

@@ -3,27 +3,18 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Globe } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useMounted, useT } from '@/lib/hooks';
 import { useSession } from '@/lib/store';
-
-interface Language {
-  code: string;
-  name: string;
-  flag: string;
-}
 
 export default function TopBar() {
   const mounted = useMounted();
   const t = useT();
   const router = useRouter();
-  const { lang, currency, currencies, user, setLang, setCurrency, setAuth } = useSession();
-  const [languages, setLanguages] = useState<Language[]>([]);
+  const { currency, currencies, user, setCurrency, setAuth } = useSession();
 
-  useEffect(() => {
-    api<Language[]>('/languages').then(setLanguages).catch(() => undefined);
-  }, []);
+  // เว็บนี้ใช้ภาษาไทยเป็นภาษาเดียว จึงไม่ต้องดึงรายการภาษาอีกต่อไป
+  useEffect(() => {}, []);
 
   const logout = () => {
     setAuth(null, null);
@@ -37,16 +28,8 @@ export default function TopBar() {
     <div className="border-b border-line bg-white">
       <div className="container flex h-8 items-center justify-between">
         <div className="flex min-w-0 items-center gap-2 sm:gap-4">
-          <label className="flex items-center gap-1">
-            <Globe size={14} aria-hidden />
-            <select aria-label="Language" className={select} value={lang} onChange={(e) => setLang(e.target.value)}>
-              {(languages.length ? languages : [{ code: 'en', name: 'English', flag: '' }]).map((l) => (
-                <option key={l.code} value={l.code}>{l.name}</option>
-              ))}
-            </select>
-          </label>
-          <select aria-label="Currency" className={select} value={currency} onChange={(e) => setCurrency(e.target.value)}>
-            {(currencies.length ? currencies : [{ code: 'USD', name: 'U.S. Dollar', symbol: '$' }]).map((c) => (
+          <select aria-label="สกุลเงิน" className={select} value={currency} onChange={(e) => setCurrency(e.target.value)}>
+            {(currencies.length ? currencies : [{ code: 'THB', name: 'บาทไทย', symbol: '฿' }]).map((c) => (
               <option key={c.code} value={c.code}>{c.name} {c.symbol}</option>
             ))}
           </select>
@@ -55,12 +38,12 @@ export default function TopBar() {
           {mounted && user ? (
             <>
               <Link href={user.userType === 'customer' ? '/account' : '/admin'} className="hover:text-primary">{user.name}</Link>
-              <button onClick={logout} className="hover:text-primary">{t('logout', 'Logout')}</button>
+              <button onClick={logout} className="hover:text-primary">{t('logout', 'ออกจากระบบ')}</button>
             </>
           ) : (
             <>
-              <Link href="/login" className="hover:text-primary">{t('login', 'Login')}</Link>
-              <Link href="/register" className="hover:text-primary">{t('registration', 'Registration')}</Link>
+              <Link href="/login" className="hover:text-primary">{t('login', 'เข้าสู่ระบบ')}</Link>
+              <Link href="/register" className="hover:text-primary">{t('registration', 'สมัครสมาชิก')}</Link>
             </>
           )}
         </div>

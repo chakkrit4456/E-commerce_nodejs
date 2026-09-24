@@ -56,19 +56,19 @@ export default function Header({ siteName }: { siteName: string }) {
           <span className="text-xl font-bold">{siteName}</span>
         </Link>
         <div className="order-3 w-full md:order-none md:w-auto md:flex-1 md:max-w-[45%]"><SearchBox /></div>
-        <nav className="ml-auto flex items-center gap-5" aria-label="Shortcuts">
-          <IconLink href="/compare" label={t('compare', 'Compare')} count={mounted ? compare.length : 0}>
+        <nav className="ml-auto flex items-center gap-5" aria-label="ทางลัด">
+          <IconLink href="/compare" label={t('compare', 'เปรียบเทียบ')} count={mounted ? compare.length : 0}>
             <ArrowLeftRight {...icon} />
           </IconLink>
-          <IconLink href="/wishlist" label={t('wishlist', 'Wishlist')} count={mounted ? wishlistCount : 0}>
+          <IconLink href="/wishlist" label={t('wishlist', 'รายการโปรด')} count={mounted ? wishlistCount : 0}>
             <Heart {...icon} />
           </IconLink>
-          <Link href="/cart" aria-label={`Cart (${cartCount})`} className="flex flex-col items-center gap-0.5 text-ink hover:text-primary">
+          <Link href="/cart" aria-label={`ตะกร้าสินค้า (${cartCount})`} className="flex flex-col items-center gap-0.5 text-ink hover:text-primary">
             <span className="relative">
               <ShoppingCart {...icon} />
               <Badge n={mounted ? cartCount : 0} />
             </span>
-            <span className="hidden text-[12px] text-ink-muted md:block">{t('cart', 'Cart')}</span>
+            <span className="hidden text-[12px] text-ink-muted md:block">{t('cart', 'ตะกร้า')}</span>
           </Link>
         </nav>
       </div>

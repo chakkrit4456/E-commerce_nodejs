@@ -137,13 +137,23 @@ async function main() {
   // Settings + pages
   await prisma.businessSetting.createMany({
     data: [
-      { type: 'site_name', value: 'Active eCommerce' }, { type: 'base_color', value: '#E62E04' },
-      { type: 'todays_deal_enabled', value: '1' }, { type: 'system_default_currency', value: 'USD' },
-      { type: 'contact_email', value: 'support@example.com' },
+      { type: 'site_name', value: 'JITD eCommerce' }, { type: 'base_color', value: '#E62E04' },
+      { type: 'todays_deal_enabled', value: '1' }, { type: 'system_default_currency', value: 'THB' },
+      { type: 'contact_email', value: 'chakkritnb4456@gmail.com' },
+      // ข้อมูลชำระเงินโหมดสาธิต — เลขพร้อมเพย์/บัญชีตัวอย่าง ยังไม่ใช่บัญชีจริง ใช้เพื่อสาธิต UI เท่านั้น
+      { type: 'promptpay_id', value: '0812345678' },
+      { type: 'bank_name', value: 'ธนาคารกรุงไทย (ตัวอย่าง)' },
+      { type: 'bank_account_name', value: 'บริษัท JITD eCommerce จำกัด (ตัวอย่าง)' },
+      { type: 'bank_account_number', value: '123-4-56789-0' },
     ],
   });
-  for (const [title, s] of [['About Us', 'about'], ['Terms & Conditions', 'terms'], ['Privacy Policy', 'privacy']]) {
-    await prisma.page.create({ data: { title, slug: s, content: `${title} — edit this page from the admin panel.`, type: 'system' } });
+  const pages: [string, string, string][] = [
+    ['เกี่ยวกับเรา', 'about', 'JITD eCommerce คือร้านค้าออนไลน์ที่รวบรวมสินค้าคุณภาพหลากหลายหมวดหมู่ไว้ในที่เดียว เรามุ่งมั่นมอบประสบการณ์ช้อปปิ้งที่สะดวก รวดเร็ว และปลอดภัยให้กับลูกค้าทุกท่าน\n\nแก้ไขเนื้อหาหน้านี้ได้จากหน้าผู้ดูแลระบบ (Admin Panel)'],
+    ['ข้อกำหนดและเงื่อนไข', 'terms', 'การใช้งานเว็บไซต์ JITD eCommerce ถือว่าท่านยอมรับข้อกำหนดและเงื่อนไขการให้บริการของเรา ซึ่งรวมถึงนโยบายการสั่งซื้อ การชำระเงิน การจัดส่ง และการคืนสินค้า\n\nแก้ไขเนื้อหาหน้านี้ได้จากหน้าผู้ดูแลระบบ (Admin Panel)'],
+    ['นโยบายความเป็นส่วนตัว', 'privacy', 'JITD eCommerce ให้ความสำคัญกับความเป็นส่วนตัวของท่าน ข้อมูลส่วนบุคคลที่ท่านให้ไว้จะถูกเก็บรักษาและใช้เพื่อการให้บริการเท่านั้น จะไม่ถูกเปิดเผยต่อบุคคลภายนอกโดยไม่ได้รับความยินยอม เว้นแต่ตามที่กฎหมายกำหนด\n\nแก้ไขเนื้อหาหน้านี้ได้จากหน้าผู้ดูแลระบบ (Admin Panel)'],
+  ];
+  for (const [title, s, content] of pages) {
+    await prisma.page.create({ data: { title, slug: s, content, type: 'system' } });
   }
 
   // eslint-disable-next-line no-console

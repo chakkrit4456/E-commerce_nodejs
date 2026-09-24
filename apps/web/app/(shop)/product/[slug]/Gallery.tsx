@@ -14,7 +14,7 @@ export default function Gallery({ photos, name }: { photos: string[]; name: stri
         <ul className="flex flex-wrap gap-2">
           {list.map((src, i) => (
             <li key={src}>
-              <button type="button" onClick={() => setActive(i)} aria-label={`Show image ${i + 1}`} aria-current={i === active} className={`h-16 w-16 overflow-hidden rounded-card border-2 ${i === active ? 'border-primary' : 'border-line'}`}>
+              <button type="button" onClick={() => setActive(i)} aria-label={`แสดงรูปที่ ${i + 1}`} aria-current={i === active} className={`h-16 w-16 overflow-hidden rounded-card border-2 ${i === active ? 'border-primary' : 'border-line'}`}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={src} alt="" className="h-full w-full object-cover" />
               </button>

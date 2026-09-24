@@ -8,6 +8,7 @@ import { storeRouter } from './routes/store';
 import { shopRouter } from './routes/shop';
 import { adminRouter } from './routes/admin';
 import { UPLOAD_DIR, uploadsRouter } from './routes/uploads';
+import { adminPaymentsRouter, paymentsRouter } from './routes/payments';
 import Decimal from 'decimal.js';
 
 export function createApp() {
@@ -23,6 +24,8 @@ export function createApp() {
   app.get('/api/health', (_req, res) => void res.json({ ok: true }));
   app.use('/uploads', express.static(UPLOAD_DIR, { maxAge: '7d', index: false }));
   app.use('/api/admin/uploads', uploadsRouter);
+  app.use('/api/admin/payments', adminPaymentsRouter);
+  app.use('/api', paymentsRouter);
   app.use('/api/auth', authRouter);
   app.use('/api/admin', adminRouter);
   app.use('/api', storeRouter);

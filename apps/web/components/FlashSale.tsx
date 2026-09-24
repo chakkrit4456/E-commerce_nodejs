@@ -20,11 +20,11 @@ export default function FlashSale({ deal }: { deal: NonNullable<HomeData['flashD
   const c = useCountdown(deal.endDate);
   const box = 'flex h-8 min-w-8 items-center justify-center rounded bg-primary px-1 font-bold text-white';
   return (
-    <section className="ae-card p-4" aria-label="Flash sale">
+    <section className="ae-card p-4" aria-label="แฟลชเซล">
       <div className="mb-3 flex flex-wrap items-center gap-3">
-        <h2 className="ae-h">{t('flash_sale', 'Flash Sale')}: {deal.title}</h2>
-        <div className="flex items-center gap-1" role="timer" aria-label="Time left">
-          <span className={box}>{c.d}d</span><span className={box}>{String(c.h).padStart(2, '0')}</span>:
+        <h2 className="ae-h">{t('flash_sale', 'แฟลชเซล')}: {deal.title}</h2>
+        <div className="flex items-center gap-1" role="timer" aria-label="เวลาที่เหลือ">
+          <span className={box}>{c.d}ว.</span><span className={box}>{String(c.h).padStart(2, '0')}</span>:
           <span className={box}>{String(c.m).padStart(2, '0')}</span>:<span className={box}>{String(c.s).padStart(2, '0')}</span>
         </div>
       </div>

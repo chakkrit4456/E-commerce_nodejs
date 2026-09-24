@@ -4,16 +4,16 @@ import ProductCard from '@/components/ProductCard';
 import { serverGet } from '@/lib/api';
 import type { Paged, ProductDTO } from '@/lib/types';
 
-export const metadata: Metadata = { title: 'Products' };
+export const metadata: Metadata = { title: 'สินค้าทั้งหมด' };
 
 type Params = Record<string, string | undefined>;
 
 const SORTS = [
-  ['newest', 'Newest'],
-  ['popular', 'Best selling'],
-  ['price_asc', 'Price: low to high'],
-  ['price_desc', 'Price: high to low'],
-  ['rating', 'Top rated'],
+  ['newest', 'ใหม่ล่าสุด'],
+  ['popular', 'ขายดีที่สุด'],
+  ['price_asc', 'ราคา: ต่ำไปสูง'],
+  ['price_desc', 'ราคา: สูงไปต่ำ'],
+  ['rating', 'คะแนนสูงสุด'],
 ] as const;
 
 function href(sp: Params, patch: Params): string {
@@ -42,15 +42,15 @@ export default async function ProductsPage({ searchParams }: { searchParams: Par
           {searchParams.category && <input type="hidden" name="category" value={searchParams.category} />}
           {searchParams.brand && <input type="hidden" name="brand" value={searchParams.brand} />}
           {searchParams.sort && <input type="hidden" name="sort" value={searchParams.sort} />}
-          <h3 className="ae-h">Price</h3>
+          <h3 className="ae-h">ราคา</h3>
           <div className="flex gap-2">
-            <input name="minPrice" type="number" min="0" placeholder="Min" defaultValue={searchParams.minPrice} className="ae-input" aria-label="Min price" />
-            <input name="maxPrice" type="number" min="0" placeholder="Max" defaultValue={searchParams.maxPrice} className="ae-input" aria-label="Max price" />
+            <input name="minPrice" type="number" min="0" placeholder="ต่ำสุด" defaultValue={searchParams.minPrice} className="ae-input" aria-label="ราคาต่ำสุด" />
+            <input name="maxPrice" type="number" min="0" placeholder="สูงสุด" defaultValue={searchParams.maxPrice} className="ae-input" aria-label="ราคาสูงสุด" />
           </div>
-          <button className="ae-btn w-full">Apply</button>
+          <button className="ae-btn w-full">ค้นหา</button>
         </form>
         <div>
-          <h3 className="ae-h mb-1">Categories</h3>
+          <h3 className="ae-h mb-1">หมวดหมู่</h3>
           <ul className="space-y-1">
             {(categories ?? []).filter((c) => c.level === 0).map((c) => (
               <li key={c.id}><Link href={href(searchParams, { category: c.slug, page: undefined })} className={searchParams.category === c.slug ? 'font-bold text-primary' : 'hover:text-primary'}>{c.name}</Link></li>
@@ -58,19 +58,19 @@ export default async function ProductsPage({ searchParams }: { searchParams: Par
           </ul>
         </div>
         <div>
-          <h3 className="ae-h mb-1">Brands</h3>
+          <h3 className="ae-h mb-1">แบรนด์</h3>
           <ul className="space-y-1">
             {(brands ?? []).map((b) => (
               <li key={b.id}><Link href={href(searchParams, { brand: b.slug, page: undefined })} className={searchParams.brand === b.slug ? 'font-bold text-primary' : 'hover:text-primary'}>{b.name}</Link></li>
             ))}
           </ul>
         </div>
-        <Link href="/products" className="block text-primary">Clear filters</Link>
+        <Link href="/products" className="block text-primary">ล้างตัวกรอง</Link>
       </aside>
 
       <section>
         <div className="ae-card mb-3 flex flex-wrap items-center justify-between gap-2 p-3">
-          <p>{data ? `${data.total} products` : ''}{searchParams.q ? ` for “${searchParams.q}”` : ''}</p>
+          <p>{data ? `${data.total} สินค้า` : ''}{searchParams.q ? ` สำหรับ “${searchParams.q}”` : ''}</p>
           <div className="flex flex-wrap gap-2">
             {SORTS.map(([v, label]) => (
               <Link key={v} href={href(searchParams, { sort: v, page: undefined })} className={`rounded-card border px-2 py-1 ${(searchParams.sort ?? 'newest') === v ? 'border-primary text-primary' : 'border-line'}`}>{label}</Link>
@@ -84,14 +84,14 @@ export default async function ProductsPage({ searchParams }: { searchParams: Par
           </div>
         ) : (
           <div className="ae-card p-10 text-center">
-            <p className="text-base font-bold text-ink">No products found</p>
-            <p className="mt-1 text-ink-muted">Try different keywords or clear the filters.</p>
-            <Link href="/products" className="ae-btn mt-4">Browse all products</Link>
+            <p className="text-base font-bold text-ink">ไม่พบสินค้า</p>
+            <p className="mt-1 text-ink-muted">ลองใช้คำค้นอื่นหรือล้างตัวกรอง</p>
+            <Link href="/products" className="ae-btn mt-4">ดูสินค้าทั้งหมด</Link>
           </div>
         )}
 
         {pages > 1 && (
-          <nav className="mt-4 flex flex-wrap justify-center gap-1" aria-label="Pagination">
+          <nav className="mt-4 flex flex-wrap justify-center gap-1" aria-label="เปลี่ยนหน้า">
             {Array.from({ length: pages }, (_, i) => i + 1).map((n) => (
               <Link key={n} href={href(searchParams, { page: String(n) })} aria-current={n === page ? 'page' : undefined} className={`min-w-9 rounded-card border px-3 py-1.5 text-center ${n === page ? 'border-primary bg-primary text-white' : 'border-line bg-white'}`}>{n}</Link>
             ))}

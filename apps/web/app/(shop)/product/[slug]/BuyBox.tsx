@@ -26,7 +26,7 @@ export default function BuyBox({ product, variants }: { product: ProductDTO; var
     <div className="space-y-3">
       {variants.length > 0 && (
         <div>
-          <span className="ae-label">Variant</span>
+          <span className="ae-label">ตัวเลือกสินค้า</span>
           <div className="flex flex-wrap gap-2">
             {variants.map((v) => (
               <button key={v.id} type="button" disabled={v.qty < 1} onClick={() => setVariant(v.variant)} aria-pressed={variant === v.variant}
@@ -38,14 +38,14 @@ export default function BuyBox({ product, variants }: { product: ProductDTO; var
         </div>
       )}
       <div className="flex items-center gap-2">
-        <span className="ae-label !mb-0">Quantity</span>
-        <button type="button" className="ae-btn-outline h-9 w-9 !p-0" onClick={() => setQty(Math.max(1, qty - 1))} aria-label="Decrease"><Minus size={16} /></button>
+        <span className="ae-label !mb-0">จำนวน</span>
+        <button type="button" className="ae-btn-outline h-9 w-9 !p-0" onClick={() => setQty(Math.max(1, qty - 1))} aria-label="ลดจำนวน"><Minus size={16} /></button>
         <span className="w-8 text-center font-semibold" aria-live="polite">{qty}</span>
-        <button type="button" className="ae-btn-outline h-9 w-9 !p-0" onClick={() => setQty(Math.min(product.currentStock, qty + 1))} aria-label="Increase"><Plus size={16} /></button>
+        <button type="button" className="ae-btn-outline h-9 w-9 !p-0" onClick={() => setQty(Math.min(product.currentStock, qty + 1))} aria-label="เพิ่มจำนวน"><Plus size={16} /></button>
       </div>
       <div className="flex gap-2">
-        <button className="ae-btn" disabled={out || busy} onClick={() => submit(false)}>{busy ? '…' : t('add_to_cart', 'Add to cart')}</button>
-        <button className="ae-btn-outline" disabled={out || busy} onClick={() => submit(true)}>Buy now</button>
+        <button className="ae-btn" disabled={out || busy} onClick={() => submit(false)}>{busy ? '…' : t('add_to_cart', 'ใส่ตะกร้า')}</button>
+        <button className="ae-btn-outline" disabled={out || busy} onClick={() => submit(true)}>ซื้อทันที</button>
       </div>
     </div>
   );

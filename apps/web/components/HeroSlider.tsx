@@ -21,13 +21,13 @@ export default function HeroSlider({ sliders }: { sliders: HomeData['sliders'] }
       keyboard
       loop={sliders.length > 1}
       speed={500}
-      a11y={{ prevSlideMessage: 'Previous slide', nextSlideMessage: 'Next slide' }}
+      a11y={{ prevSlideMessage: 'สไลด์ก่อนหน้า', nextSlideMessage: 'สไลด์ถัดไป' }}
     >
       {sliders.map((s, i) => (
         <SwiperSlide key={s.id}>
           <Link href={s.link}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={s.image} alt={`Slide ${i + 1}`} className="h-full w-full object-cover" loading={i === 0 ? 'eager' : 'lazy'} fetchPriority={i === 0 ? 'high' : 'auto'} />
+            <img src={s.image} alt={`สไลด์ ${i + 1}`} className="h-full w-full object-cover" loading={i === 0 ? 'eager' : 'lazy'} fetchPriority={i === 0 ? 'high' : 'auto'} />
           </Link>
         </SwiperSlide>
       ))}

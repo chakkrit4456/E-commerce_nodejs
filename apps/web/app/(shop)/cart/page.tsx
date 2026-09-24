@@ -34,7 +34,7 @@ export default function CartPage() {
       await api(path, { body });
       await load();
     } catch (e) {
-      toast.error(e instanceof ApiError ? e.message : 'Failed');
+      toast.error(e instanceof ApiError ? e.message : 'ไม่สำเร็จ');
     }
   };
 
@@ -43,7 +43,7 @@ export default function CartPage() {
     if (c.couponError) toast.error(c.couponError);
     else {
       setApplied(coupon.trim().toUpperCase());
-      toast.success('Coupon applied');
+      toast.success('ใช้คูปองสำเร็จ');
       sessionStorage.setItem('ae-coupon', coupon.trim().toUpperCase());
     }
   };
@@ -53,8 +53,8 @@ export default function CartPage() {
   if (!cart.items.length) {
     return (
       <div className="ae-card p-12 text-center">
-        <p className="text-lg font-bold text-ink">Your cart is empty</p>
-        <Link href="/products" className="ae-btn mt-4">Continue shopping</Link>
+        <p className="text-lg font-bold text-ink">ตะกร้าของคุณว่างเปล่า</p>
+        <Link href="/products" className="ae-btn mt-4">เลือกซื้อสินค้าต่อ</Link>
       </div>
     );
   }
@@ -72,30 +72,30 @@ export default function CartPage() {
               <p className="text-primary">{fmt(i.price)}</p>
             </div>
             <div className="flex items-center gap-1">
-              <button className="ae-btn-outline h-8 w-8 !p-0" aria-label="Decrease" disabled={i.quantity <= 1} onClick={() => act('/cart/update', { id: i.id, quantity: i.quantity - 1 })}><Minus size={14} /></button>
+              <button className="ae-btn-outline h-8 w-8 !p-0" aria-label="ลดจำนวน" disabled={i.quantity <= 1} onClick={() => act('/cart/update', { id: i.id, quantity: i.quantity - 1 })}><Minus size={14} /></button>
               <span className="w-8 text-center" aria-live="polite">{i.quantity}</span>
-              <button className="ae-btn-outline h-8 w-8 !p-0" aria-label="Increase" disabled={i.quantity >= i.stock} onClick={() => act('/cart/update', { id: i.id, quantity: i.quantity + 1 })}><Plus size={14} /></button>
+              <button className="ae-btn-outline h-8 w-8 !p-0" aria-label="เพิ่มจำนวน" disabled={i.quantity >= i.stock} onClick={() => act('/cart/update', { id: i.id, quantity: i.quantity + 1 })}><Plus size={14} /></button>
             </div>
             <p className="w-24 text-right font-bold text-ink">{fmt(i.lineTotal)}</p>
-            <button className="text-danger hover:underline" onClick={() => act('/cart/remove', { id: i.id })}>Remove</button>
+            <button className="text-danger hover:underline" onClick={() => act('/cart/remove', { id: i.id })}>ลบ</button>
           </div>
         ))}
       </section>
 
       <aside className="ae-card h-fit space-y-3 p-4">
-        <h2 className="ae-h">Order summary</h2>
+        <h2 className="ae-h">สรุปคำสั่งซื้อ</h2>
         <div className="flex gap-2">
-          <input className="ae-input" placeholder="Coupon code" value={coupon} onChange={(e) => setCoupon(e.target.value)} aria-label="Coupon code" />
-          <button className="ae-btn-outline" onClick={applyCoupon} disabled={!coupon.trim()}>Apply</button>
+          <input className="ae-input" placeholder="รหัสคูปอง" value={coupon} onChange={(e) => setCoupon(e.target.value)} aria-label="รหัสคูปอง" />
+          <button className="ae-btn-outline" onClick={applyCoupon} disabled={!coupon.trim()}>ใช้คูปอง</button>
         </div>
         <dl className="space-y-1">
-          <Row label="Subtotal" v={fmt(cart.subtotal)} />
-          <Row label="Tax" v={fmt(cart.tax)} />
-          <Row label="Shipping" v={fmt(cart.shippingCost)} />
-          {cart.couponDiscount > 0 && <Row label="Coupon" v={`-${fmt(cart.couponDiscount)}`} />}
-          <div className="flex justify-between border-t border-line pt-2 text-base font-bold text-ink"><dt>Total</dt><dd className="text-primary">{fmt(cart.grandTotal)}</dd></div>
+          <Row label="ยอดรวมสินค้า" v={fmt(cart.subtotal)} />
+          <Row label="ภาษี" v={fmt(cart.tax)} />
+          <Row label="ค่าจัดส่ง" v={fmt(cart.shippingCost)} />
+          {cart.couponDiscount > 0 && <Row label="ส่วนลดคูปอง" v={`-${fmt(cart.couponDiscount)}`} />}
+          <div className="flex justify-between border-t border-line pt-2 text-base font-bold text-ink"><dt>ยอดรวมทั้งหมด</dt><dd className="text-primary">{fmt(cart.grandTotal)}</dd></div>
         </dl>
-        <Link href="/checkout" className="ae-btn w-full">Proceed to checkout</Link>
+        <Link href="/checkout" className="ae-btn w-full">ดำเนินการชำระเงิน</Link>
       </aside>
     </div>
   );

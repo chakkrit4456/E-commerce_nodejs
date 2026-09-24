@@ -1,4 +1,4 @@
-# Active eCommerce (Node.js) — MVP
+# JITD eCommerce (Node.js) — MVP
 
 ระบบร้านค้าออนไลน์ตามเอกสารใน [`E-commerce_nodejs/`](E-commerce_nodejs/README.md): **Express + TypeScript + Prisma** (API) และ **Next.js 14 + Tailwind** (หน้าร้าน + แอดมิน)
 

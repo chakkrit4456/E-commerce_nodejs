@@ -7,8 +7,8 @@ import './globals.css';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: { default: 'Active eCommerce', template: '%s | Active eCommerce' },
-  description: 'Online shop for fashion, electronics, home and more.',
+  title: { default: 'JITD eCommerce', template: '%s | JITD eCommerce' },
+  description: 'ร้านค้าออนไลน์ เสื้อผ้า อุปกรณ์อิเล็กทรอนิกส์ ของใช้ในบ้าน และอื่นๆ อีกมากมาย',
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -17,7 +17,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // สีหลักจากหลังบ้าน (Appearance → Base color) → CSS variable --primary; ตรวจ format กัน CSS injection
   const primary = color && /^#[0-9a-fA-F]{6}$/.test(color) ? color : '#E62E04';
   return (
-    <html lang="en" style={{ ['--primary' as string]: primary }}>
+    <html lang="th" style={{ ['--primary' as string]: primary }}>
       <body>
         <Providers>{children}</Providers>
       </body>

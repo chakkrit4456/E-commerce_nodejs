@@ -11,18 +11,19 @@ const prisma = new PrismaClient();
 const img = (size: string, text: string, color = 'E62E04') => `/api/img/${size}?t=${encodeURIComponent(text)}&c=${color}`;
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-const TOP_CATEGORIES: [string, string][] = [
-  ['Women Clothing & Fashion', 'shirt'],
-  ['Men Clothing & Fashion', 'briefcase'],
-  ['Computer & Accessories', 'laptop'],
-  ['Automobile & Motorcycle', 'car'],
-  ['Kids & toy', 'baby'],
-  ['Sports & outdoor', 'dumbbell'],
-  ['Jewelry & Watches', 'watch'],
-  ['Cellphones & Tabs', 'smartphone'],
-  ['Beauty, Health & Hair', 'sparkles'],
-  ['Home Improvement & Tools', 'wrench'],
-  ['Home decoration & Appliance', 'sofa'],
+// key = ตัวระบุภายในสำหรับ seed (คงเดิมเป็นอังกฤษ ใช้ผูกกับ SEED_PRODUCTS ใน products.ts), thaiName = ชื่อที่แสดงจริงบนเว็บ
+const TOP_CATEGORIES: [string, string, string][] = [
+  ['Women Clothing & Fashion', 'แฟชั่นผู้หญิง', 'shirt'],
+  ['Men Clothing & Fashion', 'แฟชั่นผู้ชาย', 'briefcase'],
+  ['Computer & Accessories', 'คอมพิวเตอร์และอุปกรณ์เสริม', 'laptop'],
+  ['Automobile & Motorcycle', 'รถยนต์และมอเตอร์ไซค์', 'car'],
+  ['Kids & toy', 'เด็กและของเล่น', 'baby'],
+  ['Sports & outdoor', 'กีฬาและกิจกรรมกลางแจ้ง', 'dumbbell'],
+  ['Jewelry & Watches', 'เครื่องประดับและนาฬิกา', 'watch'],
+  ['Cellphones & Tabs', 'มือถือและแท็บเล็ต', 'smartphone'],
+  ['Beauty, Health & Hair', 'ความงาม สุขภาพ และเส้นผม', 'sparkles'],
+  ['Home Improvement & Tools', 'เครื่องมือช่างและซ่อมบ้าน', 'wrench'],
+  ['Home decoration & Appliance', 'ของแต่งบ้านและเครื่องใช้ไฟฟ้า', 'sofa'],
 ];
 
 
@@ -51,21 +52,21 @@ async function main() {
 
   // Categories (11 หมวดบน + ลูกบางส่วน)
   const cat: Record<string, number> = {};
-  for (const [i, [name, icon]] of TOP_CATEGORIES.entries()) {
-    const c = await prisma.category.create({ data: { name, slug: slug(name), icon, orderLevel: i, level: 0, banner: img('96x96', name.split(' ')[0], 'FDE3DC') } });
-    cat[name] = c.id;
+  for (const [i, [key, thaiName, icon]] of TOP_CATEGORIES.entries()) {
+    const c = await prisma.category.create({ data: { name: thaiName, slug: slug(key), icon, orderLevel: i, level: 0, banner: img('96x96', key.split(' ')[0], 'FDE3DC') } });
+    cat[key] = c.id;
   }
-  const kids: [string, string][] = [
-    ['Women Dress', 'Women Clothing & Fashion'], ['Women Watches', 'Jewelry & Watches'], ['Men Formal', 'Men Clothing & Fashion'],
-    ['Mobile Phones', 'Cellphones & Tabs'], ['Baby Dress', 'Kids & toy'], ['Doll', 'Kids & toy'], ['Tools', 'Home Improvement & Tools'],
+  const kids: [string, string, string][] = [
+    ['Women Dress', 'เดรสผู้หญิง', 'Women Clothing & Fashion'], ['Women Watches', 'นาฬิกาผู้หญิง', 'Jewelry & Watches'], ['Men Formal', 'ชุดทำงานผู้ชาย', 'Men Clothing & Fashion'],
+    ['Mobile Phones', 'โทรศัพท์มือถือ', 'Cellphones & Tabs'], ['Baby Dress', 'ชุดเด็กอ่อน', 'Kids & toy'], ['Doll', 'ตุ๊กตา', 'Kids & toy'], ['Tools', 'เครื่องมือช่าง', 'Home Improvement & Tools'],
   ];
-  for (const [i, [name, parent]] of kids.entries()) {
-    const c = await prisma.category.create({ data: { name, slug: slug(name), parentId: cat[parent], level: 1, orderLevel: i, banner: img('96x96', name.split(' ')[0], 'FDE3DC') } });
-    cat[name] = c.id;
+  for (const [i, [key, thaiName, parentKey]] of kids.entries()) {
+    const c = await prisma.category.create({ data: { name: thaiName, slug: slug(key), parentId: cat[parentKey], level: 1, orderLevel: i, banner: img('96x96', key.split(' ')[0], 'FDE3DC') } });
+    cat[key] = c.id;
   }
   // Featured strip (8)
   const featured = ['Sports & outdoor', 'Mobile Phones', 'Women Watches', 'Women Dress', 'Baby Dress', 'Men Formal', 'Doll', 'Tools'];
-  for (const [i, name] of featured.entries()) await prisma.homeFeaturedCategory.create({ data: { categoryId: cat[name], sortOrder: i } });
+  for (const [i, key] of featured.entries()) await prisma.homeFeaturedCategory.create({ data: { categoryId: cat[key], sortOrder: i } });
 
   // Brands, colors, attributes
   const brandNames = [...new Set(SEED_PRODUCTS.flatMap((p) => (p.brand ? [p.brand] : [])))];

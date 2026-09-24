@@ -123,4 +123,34 @@ export const SEED_PRODUCTS: SeedProduct[] = [
     price: 39, discountPercent: 15, stock: 16, tags: 'smart speaker,echo dot,amazon,alexa,home',
     description: 'Round white Amazon Echo Dot (2nd generation) smart speaker with a dark grey top grille and the Amazon logo printed on the side.',
   },
+  {
+    slug: 'mens-chino-pants-stone', name: "Men's Slim-Fit Chino Pants (Stone)", category: 'Men Clothing & Fashion',
+    price: 45, stock: 22, tags: 'chino,pants,trousers,men,slim fit',
+    description: "Stone-coloured slim-fit chino pants, shown worn with a blue gingham shirt and white sneakers to display fit and length.",
+  },
+  {
+    slug: 'mens-chino-pants-olive', name: "Men's Slim-Fit Chino Pants (Olive)", category: 'Men Clothing & Fashion',
+    price: 45, discountPercent: 10, stock: 18, tags: 'chino,pants,trousers,men,slim fit,olive',
+    description: "Olive-green slim-fit chino pants, shown worn with a rolled-sleeve shirt to display the tapered leg.",
+  },
+  {
+    slug: 'mens-chino-pants-grey', name: "Men's Slim-Fit Dress Pants (Grey)", category: 'Men Clothing & Fashion',
+    price: 49, stock: 15, tags: 'dress pants,trousers,men,slim fit,grey',
+    description: "Charcoal-grey slim-fit dress pants with a creased leg, shown worn with a check shirt and suede shoes.",
+  },
+  {
+    slug: 'mens-gingham-dress-shirt-purple', name: "Men's Long-Sleeve Gingham Dress Shirt (Purple)", category: 'Men Clothing & Fashion',
+    price: 39, stock: 20, featured: true, tags: 'shirt,dress shirt,gingham,men,long sleeve',
+    description: "Purple-and-white gingham-check long-sleeve button-down shirt with a button-down collar and chest pocket.",
+  },
+  {
+    slug: 'mens-gingham-dress-shirt-red', name: "Men's Long-Sleeve Gingham Dress Shirt (Red)", category: 'Men Clothing & Fashion',
+    price: 39, discountPercent: 12, stock: 20, tags: 'shirt,dress shirt,gingham,men,long sleeve,red',
+    description: "Red-and-white gingham-check long-sleeve button-down shirt with a button-down collar and embroidered chest logo.",
+  },
+  {
+    slug: 'mens-gingham-dress-shirt-lilac', name: "Men's Long-Sleeve Gingham Dress Shirt (Lilac)", category: 'Men Clothing & Fashion',
+    price: 39, stock: 17, tags: 'shirt,dress shirt,gingham,men,long sleeve,lilac',
+    description: "Lilac-and-white gingham-check long-sleeve button-down shirt, shown worn with cream trousers and a brown belt.",
+  },
 ];

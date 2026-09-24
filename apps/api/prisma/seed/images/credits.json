@@ -196,5 +196,53 @@
    "author": "bradtraversy/proshop-v2 (open-source demo project)",
    "page": "https://github.com/bradtraversy/proshop-v2"
   }
+ ],
+ "mens-chino-pants-stone": [
+  {
+   "file": "mens-chino-pants-stone-1.jpg",
+   "license": "ISC (repo)",
+   "author": "basir/node-react-ecommerce (open-source demo project)",
+   "page": "https://github.com/basir/node-react-ecommerce"
+  }
+ ],
+ "mens-chino-pants-olive": [
+  {
+   "file": "mens-chino-pants-olive-1.jpg",
+   "license": "ISC (repo)",
+   "author": "basir/node-react-ecommerce (open-source demo project)",
+   "page": "https://github.com/basir/node-react-ecommerce"
+  }
+ ],
+ "mens-chino-pants-grey": [
+  {
+   "file": "mens-chino-pants-grey-1.jpg",
+   "license": "ISC (repo)",
+   "author": "basir/node-react-ecommerce (open-source demo project)",
+   "page": "https://github.com/basir/node-react-ecommerce"
+  }
+ ],
+ "mens-gingham-dress-shirt-purple": [
+  {
+   "file": "mens-gingham-dress-shirt-purple-1.jpg",
+   "license": "ISC (repo)",
+   "author": "basir/node-react-ecommerce (open-source demo project)",
+   "page": "https://github.com/basir/node-react-ecommerce"
+  }
+ ],
+ "mens-gingham-dress-shirt-red": [
+  {
+   "file": "mens-gingham-dress-shirt-red-1.jpg",
+   "license": "ISC (repo)",
+   "author": "basir/node-react-ecommerce (open-source demo project)",
+   "page": "https://github.com/basir/node-react-ecommerce"
+  }
+ ],
+ "mens-gingham-dress-shirt-lilac": [
+  {
+   "file": "mens-gingham-dress-shirt-lilac-1.jpg",
+   "license": "ISC (repo)",
+   "author": "basir/node-react-ecommerce (open-source demo project)",
+   "page": "https://github.com/basir/node-react-ecommerce"
+  }
  ]
 }

@@ -133,9 +133,11 @@ async function main() {
     );
   }
 
-  // Sliders + Banners
-  for (const [i, t] of ['Mega Sale', 'New Arrivals', 'Free Shipping'].entries()) {
-    await prisma.slider.create({ data: { image: img('1100x440', t, ['E62E04', '0ABB75', 'FFA707'][i]), link: '/products', sortOrder: i } });
+  // Hero slider — ภาพจริงที่ออกแบบมาโดยเฉพาะ (Mega Sale, สินค้ามาใหม่, จัดส่งฟรี)
+  const heroSlides = ['hero-mega-sale-1.jpg', 'hero-new-arrivals-1.jpg', 'hero-free-shipping-1.jpg'];
+  for (const [i, file] of heroSlides.entries()) {
+    const image = await copyImage(file);
+    await prisma.slider.create({ data: { image, link: '/products', sortOrder: i } });
   }
   for (const [i, t] of ['SUPER SALE 50%', 'SUMMER 50% OFF', 'End of Season SALE'].entries()) {
     await prisma.banner.create({ data: { position: (['home_1', 'home_2', 'home_3'] as const)[i], image: img('600x210', t, ['4A4A5A', 'FFA707', 'EF486A'][i]), link: '/products', sortOrder: i } });

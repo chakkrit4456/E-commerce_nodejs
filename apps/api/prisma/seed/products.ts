@@ -98,4 +98,29 @@ export const SEED_PRODUCTS: SeedProduct[] = [
     price: 16, stock: 25, tags: 'cream,day cream,skincare,face cream',
     description: 'White day cream in a small glass jar with a blue screw cap. The foil inner seal is peeled partly back to show the cream.',
   },
+  {
+    slug: 'apple-iphone-11-pro', name: 'Apple iPhone 11 Pro (Silver)', category: 'Cellphones & Tabs', brand: 'Apple',
+    price: 699, discountPercent: 8, stock: 10, todaysDeal: true, featured: true, tags: 'smartphone,iphone,apple,mobile',
+    description: 'Silver iPhone 11 Pro shown from the back, with its triple-camera module in the top-left corner and the Apple logo centred on the glass back panel.',
+  },
+  {
+    slug: 'canon-eos-80d-dslr-camera', name: 'Canon EOS 80D DSLR Camera with Lens', category: 'Computer & Accessories', brand: 'Canon',
+    price: 899, stock: 6, featured: true, tags: 'camera,dslr,canon,eos,photography',
+    description: 'Black Canon EOS 80D DSLR body fitted with a zoom lens and lens hood, photographed at an angle on a plain light background.',
+  },
+  {
+    slug: 'sony-playstation-5-console', name: 'Sony PlayStation 5 Console with DualSense Controller', category: 'Computer & Accessories', brand: 'Sony',
+    price: 499, stock: 7, todaysDeal: true, tags: 'playstation,ps5,console,sony,gaming',
+    description: 'White upright PlayStation 5 console with its blue-lit centre strip, shown next to a matching white-and-black DualSense wireless controller.',
+  },
+  {
+    slug: 'logitech-wireless-mouse', name: 'Logitech G303 Wireless Gaming Mouse', category: 'Computer & Accessories', brand: 'Logitech',
+    price: 59, discountPercent: 10, stock: 20, tags: 'mouse,wireless,logitech,gaming,computer accessory',
+    description: 'White wireless gaming mouse with the Logitech G logo on top, photographed at an angle on a light surface showing its ergonomic shape.',
+  },
+  {
+    slug: 'amazon-echo-dot-speaker', name: 'Amazon Echo Dot (2nd Generation) Smart Speaker', category: 'Home decoration & Appliance', brand: 'Amazon',
+    price: 39, discountPercent: 15, stock: 16, tags: 'smart speaker,echo dot,amazon,alexa,home',
+    description: 'Round white Amazon Echo Dot (2nd generation) smart speaker with a dark grey top grille and the Amazon logo printed on the side.',
+  },
 ];

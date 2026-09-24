@@ -156,5 +156,45 @@
    "author": "Benff",
    "page": "https://commons.wikimedia.org/wiki/File:Day_cream_02.jpg"
   }
+ ],
+ "apple-iphone-11-pro": [
+  {
+   "file": "apple-iphone-11-pro-1.jpg",
+   "license": "MIT (repo)",
+   "author": "bradtraversy/proshop-v2 (open-source demo project)",
+   "page": "https://github.com/bradtraversy/proshop-v2"
+  }
+ ],
+ "canon-eos-80d-dslr-camera": [
+  {
+   "file": "canon-eos-80d-dslr-camera-1.jpg",
+   "license": "MIT (repo)",
+   "author": "bradtraversy/proshop-v2 (open-source demo project)",
+   "page": "https://github.com/bradtraversy/proshop-v2"
+  }
+ ],
+ "sony-playstation-5-console": [
+  {
+   "file": "sony-playstation-5-console-1.jpg",
+   "license": "MIT (repo)",
+   "author": "bradtraversy/proshop-v2 (open-source demo project)",
+   "page": "https://github.com/bradtraversy/proshop-v2"
+  }
+ ],
+ "logitech-wireless-mouse": [
+  {
+   "file": "logitech-wireless-mouse-1.jpg",
+   "license": "MIT (repo)",
+   "author": "bradtraversy/proshop-v2 (open-source demo project)",
+   "page": "https://github.com/bradtraversy/proshop-v2"
+  }
+ ],
+ "amazon-echo-dot-speaker": [
+  {
+   "file": "amazon-echo-dot-speaker-1.jpg",
+   "license": "MIT (repo)",
+   "author": "bradtraversy/proshop-v2 (open-source demo project)",
+   "page": "https://github.com/bradtraversy/proshop-v2"
+  }
  ]
 }

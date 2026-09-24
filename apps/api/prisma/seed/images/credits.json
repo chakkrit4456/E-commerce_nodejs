@@ -244,5 +244,19 @@
    "author": "basir/node-react-ecommerce (open-source demo project)",
    "page": "https://github.com/basir/node-react-ecommerce"
   }
+ ],
+ "beige-leather-sneakers": [
+  {
+   "file": "beige-leather-sneakers-1.jpg",
+   "license": "ISC (repo)",
+   "author": "jdnCreations/ecommerce-sneakers (open-source demo project)",
+   "page": "https://github.com/jdnCreations/ecommerce-sneakers"
+  },
+  {
+   "file": "beige-leather-sneakers-2.jpg",
+   "license": "ISC (repo)",
+   "author": "jdnCreations/ecommerce-sneakers (open-source demo project)",
+   "page": "https://github.com/jdnCreations/ecommerce-sneakers"
+  }
  ]
 }

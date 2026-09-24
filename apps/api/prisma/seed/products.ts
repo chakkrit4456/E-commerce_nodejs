@@ -153,4 +153,9 @@ export const SEED_PRODUCTS: SeedProduct[] = [
     price: 39, stock: 17, tags: 'shirt,dress shirt,gingham,men,long sleeve,lilac',
     description: "Lilac-and-white gingham-check long-sleeve button-down shirt, shown worn with cream trousers and a brown belt.",
   },
+  {
+    slug: 'beige-leather-sneakers', name: 'Beige Leather Low-Top Sneakers', category: 'Sports & outdoor',
+    price: 89, discountPercent: 20, stock: 24, featured: true, tags: 'sneakers,shoes,leather,beige,footwear',
+    description: 'Beige-and-white leather low-top sneakers with a white rubber sole and a small orange tab at the heel, shown from the side and paired at an angle.',
+  },
 ];

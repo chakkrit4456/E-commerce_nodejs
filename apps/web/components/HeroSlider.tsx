@@ -10,10 +10,10 @@ import type { HomeData } from '@/lib/types';
 
 /** autoplay 5s, หยุดเมื่อ hover, swipe/keyboard ได้ (01-PRD FR-12..14) */
 export default function HeroSlider({ sliders }: { sliders: HomeData['sliders'] }) {
-  if (!sliders.length) return <div className="ae-card aspect-[2.5/1]" />;
+  if (!sliders.length) return <div className="ae-card aspect-[2/1] sm:aspect-[2.1/1]" />;
   return (
     <Swiper
-      className="hero-swiper aspect-[2.5/1] w-full overflow-hidden rounded-card"
+      className="hero-swiper aspect-[2/1] w-full overflow-hidden rounded-card sm:aspect-[2.1/1]"
       modules={[Autoplay, Navigation, Pagination, Keyboard]}
       autoplay={{ delay: 5000, pauseOnMouseEnter: true, disableOnInteraction: false }}
       navigation

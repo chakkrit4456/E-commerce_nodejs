@@ -23,7 +23,17 @@ export interface HomeData {
   todaysDeal: ProductDTO[];
   banners: { id: number; image: string; link: string; position: string }[];
   bestSelling: ProductDTO[];
-  flashDeal: { id: number; title: string; endDate: string; products: ProductDTO[] } | null;
+  flashDeal: { id: number; title: string; slug: string; endDate: string; products: ProductDTO[] } | null;
+}
+
+export interface FlashDealDetail {
+  id: number;
+  title: string;
+  slug: string;
+  startDate: string;
+  endDate: string;
+  active: boolean;
+  products: ProductDTO[];
 }
 
 export interface Currency {

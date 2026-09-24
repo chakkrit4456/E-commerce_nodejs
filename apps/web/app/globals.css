@@ -77,3 +77,36 @@ body {
 .badge-pop {
   animation: badge-pop 0.25s ease-out;
 }
+
+@keyframes promo-fade-up {
+  0% { opacity: 0; transform: translateY(18px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.promo-banner {
+  animation: promo-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes promo-shine {
+  0% { transform: translateX(-130%) skewX(-20deg); }
+  100% { transform: translateX(230%) skewX(-20deg); }
+}
+.promo-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 35%;
+  background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: translateX(-130%) skewX(-20deg);
+  pointer-events: none;
+}
+.group:hover .promo-shine::after {
+  animation: promo-shine 1s ease-in-out;
+}
+
+@keyframes promo-glow {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+.promo-glow {
+  animation: promo-glow 2.4s ease-in-out infinite;
+}

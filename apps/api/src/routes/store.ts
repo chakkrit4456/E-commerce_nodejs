@@ -41,12 +41,34 @@ storeRouter.get(
         flashDeal: flash && {
           id: flash.id,
           title: flash.title,
+          slug: flash.slug,
           endDate: flash.endDate,
           products: await toProductDTOs(flash.products.map((p) => p.product)),
         },
       };
     });
     res.json(payload);
+  }),
+);
+
+/** หน้าแฟลชเซลแยกเฉพาะ: ดึงตาม slug ไม่จำกัดจำนวนสินค้า (ต่างจาก /home ที่ใช้แค่พรีวิว) */
+storeRouter.get(
+  '/flash-deals/:slug',
+  wrap(async (req, res) => {
+    const deal = await prisma.flashDeal.findUnique({
+      where: { slug: req.params.slug },
+      include: { products: { include: { product: true } } },
+    });
+    if (!deal) throw new HttpError(404, 'ไม่พบแฟลชเซลนี้');
+    res.json({
+      id: deal.id,
+      title: deal.title,
+      slug: deal.slug,
+      startDate: deal.startDate,
+      endDate: deal.endDate,
+      active: deal.status && deal.startDate <= new Date() && deal.endDate >= new Date(),
+      products: await toProductDTOs(deal.products.map((p) => p.product)),
+    });
   }),
 );
 

@@ -11,6 +11,8 @@ services:
         value: 22.23.2
       - key: DATABASE_URL
         value: file:./dev.db
+      - key: GOOGLE_CLIENT_ID
+        sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: WEB_HOST

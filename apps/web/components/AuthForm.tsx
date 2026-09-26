@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { api, ApiError } from '@/lib/api';
+import GoogleLoginButton from './GoogleLoginButton';
 import { useSession } from '@/lib/store';
 import type { User } from '@/lib/types';
 
@@ -16,13 +17,17 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
   const [busy, setBusy] = useState(false);
   const isLogin = mode === 'login';
 
-  const submit = async (e: React.FormEvent) => {
+  const submit = (e: React.FormEvent) => {
     e.preventDefault();
+    const body = isLogin ? { email: form.email, password: form.password, guestId: tempId } : { ...form, guestId: tempId };
+    return authenticate(`/auth/${mode}`, body);
+  };
+
+  const authenticate = async (path: string, body: unknown) => {
     setError('');
     setBusy(true);
     try {
-      const body = isLogin ? { email: form.email, password: form.password, guestId: tempId } : { ...form, guestId: tempId };
-      const r = await api<{ token: string; user: User }>(`/auth/${mode}`, { body });
+      const r = await api<{ token: string; user: User }>(path, { body });
       setAuth(r.token, r.user);
       toast.success(`ยินดีต้อนรับ, ${r.user.name}`);
       router.push(r.user.userType === 'customer' ? '/account' : '/admin');
@@ -43,6 +48,7 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
       <div><label className="ae-label" htmlFor="password">รหัสผ่าน</label><input id="password" type="password" className="ae-input" required minLength={isLogin ? 1 : 8} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />{!isLogin && <p className="mt-1 text-[12px] text-ink-muted">อย่างน้อย 8 ตัวอักษร</p>}</div>
       {error && <p role="alert" className="text-danger">{error}</p>}
       <button className="ae-btn w-full" disabled={busy}>{busy ? 'กรุณารอสักครู่…' : isLogin ? 'เข้าสู่ระบบ' : 'สมัครสมาชิก'}</button>
+      <GoogleLoginButton onCredential={(credential) => authenticate('/auth/google', { credential, guestId: tempId })} />
       <p className="text-center text-ink-muted">
         {isLogin ? <>ยังไม่มีบัญชี? <Link href="/register" className="text-primary">สมัครสมาชิก</Link></> : <>มีบัญชีอยู่แล้ว? <Link href="/login" className="text-primary">เข้าสู่ระบบ</Link></>}
       </p>

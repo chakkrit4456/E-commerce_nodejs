@@ -12,7 +12,7 @@ services:
       - key: DATABASE_URL
         value: file:./dev.db
       - key: GOOGLE_CLIENT_ID
-        sync: false
+        value: 100491307650-2o0m4sq6mksu5kkskc85upauu6gupqpg.apps.googleusercontent.com
       - key: JWT_SECRET
         generateValue: true
       - key: WEB_HOST
